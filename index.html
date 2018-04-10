@@ -1,0 +1,1293 @@
+<html lang='en'>
+<head>
+  <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Polly Labs Playground - Console</title>
+  <script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {inlineMath: [['\\(','\\)']]}
+  });
+  </script>
+  <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS_CHTML"></script>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=PT+Serif:400,700,400italic' rel='stylesheet' type='text/css'>
+  <link href='https://netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.css' rel='stylesheet' type='text/css'>
+  <link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css' rel='stylesheet' type='text/css'>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+  <link href='css/ansi.css' rel='stylesheet' type='text/css'>
+  <link href='css/pypyjs.css' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="styles/mono-blue.css">
+  <script src="js/showdown.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="d3.v4.min.js"></script>
+  <script src="d3plot.js"></script>
+  <script src="highlight.pack.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+
+  <script src="js/isclan.js"></script>
+  <script>
+    function pt_parseCCode(code) {
+      let jsn = Module.ccall('isclan_get_json', 'string', ['string'], [code]);
+    }
+  </script>
+
+  <style>
+    pre {
+      font-size: 1em;
+    }
+    .pt-input {
+      width: 100%;
+      font-family: "DejaVu Sans Mono", "Courier", "Courier New", monospace;
+      border-radius: 5px;
+      border: 2px solid lightgrey;
+      padding: 3px;
+      padding-left: 5px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      color: #555555;
+      overflow-x: auto;
+      overflow-y: hidden;
+      resize: none;
+      white-space: pre;
+    }
+
+    .pt-input-hidden {
+      border: 0px;
+      font-size: 0px;
+      margin: 0px;
+      resize: none;
+    }
+
+    .pt-input-markdown {
+      width: 100%;
+      font-family: "DejaVu Sans Mono", "Courier", "Courier New", monospace;
+      border-radius: 5px;
+      border: 2px solid lightgrey;
+      padding: 3px;
+      padding-left: 5px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+      font-size: 1.2em;
+      color: #555555;
+      resize: vertical;
+      overflow: auto;
+      white-space: normal;
+    }
+
+    .pt-input:focus {
+      border-color: #72b5ff;
+      color: black;
+    }
+
+    .pt-output {
+      font-family: "DejaVu Sans Mono", "Courier", "Courier New", monospace;
+      font-size: 1.2em;
+    }
+
+    .pt-output-markdown {
+      font-family: "Open Sans", "Arial", sans-serif;
+      font-size: 1.2em;
+    }
+
+    .pt-output-markdown>h1 {
+      font-size: 2.5em;
+    }
+
+    .pt-output-markdown>h2 {
+      font-size: 2.0em;
+    }
+
+    .pt-output-markdown>h3 {
+      font-size: 1.5em;
+    }
+
+    .pt-output-hidden {
+      display: none;
+    }
+
+    .pt-markdown-link {
+      float: right;
+    }
+
+    svg {
+      font: 10px sans-serif;
+      padding: 10px;
+    }
+    .frame {
+      shape-rendering: crispEdges;
+      fill: none;
+      stroke: #ddd;
+    }
+    circle {
+      fill-opacity: 0.8;
+    }
+    .tickline {
+      stroke: #eee;
+      fill: none;
+      shape-rendering: crispEdges;
+    }
+    .tile {
+      fill-opacity: 0.3;
+    }
+    pre.code {
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding: 0px;
+      font-size: 1.05em;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar navbar-inverse">
+    <div class="container">
+      <div class="navbar-header">
+        <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target=".bs-navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" id="logo" href="http://www.pollylabs.org">
+          <img src="images/logo.png" width="80" style="margin-right:10px">
+        </a>
+        <a href="./" style="margin-left: 0px; font-size: 1.5em" class="navbar-brand"><b>Playground</b></a>
+        <ul class="nav navbar-nav" style="margin-left: 100px; margin-top: 6px">
+          <li>
+            <button class="btn btn-primary" onclick="pt_newNotebook()" style="margin-right: 5px">
+              <span class="glyphicon glyphicon-file"></span>
+              New
+            </button>
+          </li>
+          <li>
+            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 5px">
+              <span class="glyphicon glyphicon-open"></span>
+              Examples
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a onclick="pt_loadExample('introduction.json')">Introduction</a></li>
+              <li><a onclick="pt_loadExample('presburger-sets-and-relations.json')">Presburger Sets and Relations</a></li>
+              <li><a onclick="pt_loadExample('iteration-domains.json')">Iteration Domains</a></li>
+              <li><a onclick="pt_loadExample('schedules.json')">Schedules</a></li>
+              <li><a onclick="pt_loadExample('memory.json')">Memory Access Analysis</a></li>
+              <li><a onclick="pt_loadExample('dependences.json')">Dependence Analysis</a></li>
+              <li><a onclick="pt_loadExample('classical-loop-transformations.json')">Classical Loop Transformations</a></li>
+              <li><a onclick="pt_loadExample('ast-generation.json')">AST Generation</a></li>
+              <li><a onclick="pt_loadExample('c-parser.json')">Parsing C Code</a></li>
+            </ul>
+          </li>
+          <li>
+            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 5px">
+              <span class="glyphicon glyphicon-open"></span>
+              Load a Session
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a onclick="pt_restoreLastSession()"><span class="glyphicon glyphicon-open"></span> Autosaved Session</a></li>
+              <li><a onclick="pt_loadSessionFromFile()"><span class="glyphicon glyphicon-open"></span> Open from File</a></li>
+              <li><a onclick="pt_askUserForSessionURL()"><span class="glyphicon glyphicon-open"></span> Open from URL</a></li>
+            </ul>
+          </li>
+          <li>
+            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown" style="margin-right: 5px">
+              <span class="glyphicon glyphicon-save"></span>
+              Save a Session
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+              <li><a onclick="pt_saveSessionToFile()"><span class="glyphicon glyphicon-save"></span> Save to File</a></li>
+              <li><a onclick="pt_saveSessionToGIST()"><span class="glyphicon glyphicon-save"></span> Save to GitHub</a></li>
+              <li><a onclick="pt_getSessionURL()"><span class="glyphicon glyphicon-save"></span> Save to Shareable URL</a></li>
+            </ul>
+          </li>
+          <li>
+            <button class="btn btn-primary" data-toggle="button" onclick="pt_toggleEditableSolutions()" style="margin-right: 5px">
+              <span class="glyphicon glyphicon-edit"></span>
+               Constructor Mode
+            </button>
+          </li>
+          <li>
+            <button class="btn btn-primary" onclick="pt_saveAndRunAll()" style="float:right;font-weight:bold;margin-left:10px">
+              <span class="glyphicon glyphicon-repeat"></span>
+              Run All
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class='container'>
+    <noscript><h3>Please enable JavaScript for using PyPy.js</h3></noscript>
+    <input type="file" id="fileSelector" style="display:none;" onchange="pt_uploadFile();this.value = null;">
+    <div class="modal fade" id="myModal" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Saved to GitHub</h4>
+          </div>
+          <div class="modal-body"><a href="">URL</a>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="pt-ui">
+      <div id="pt-wait">Please wait until PyPy.js is loaded.  It is huge, so it may take a while...</div>
+    </div>
+  </div>
+  <div class='container' style="height: 320px">
+  </div>
+  <div class='container'>
+     This work is powered by
+     <a href="http://emscripten.org">Emscripten</a>,
+     <a href="https://www.mathjax.org/">MathJax</a>,
+     <a href="https://d3js.org/">D3.js</a>,
+     <a href="https://highlightjs.org/">highlight.js</a>, and
+     <a href="http://pypyjs.org">PyPy.js</a>.
+  </div>
+  <div class='container'>
+  <h2> Tutorial </h2>
+  Our <a href="https://lirias.kuleuven.be/bitstream/123456789/523109/3/polycomp-tutorial-v0.02.pdf">
+Presburger Formulas and Polyhedral Compilation Tutorial</a> provides
+documentation on how to use isl and isl python. However, it currently lacks
+documentation of the AST generation functionality.
+  <h2> Publications </h2>
+  <p>
+  <b>isl: An Integer Set Library for the Polyhedral Model</b><br>
+  Sven Verdoolaege<br>
+  Lecture notes in computer science - mathematical software (ICMS), 2010<br>
+  <a href="http://link.springer.com/chapter/10.1007%2F978-3-642-15582-6_49">Details</a>
+  </p>
+  <p>
+  <b>Polyhedral AST generation is more than scanning polyhedra</b><br>
+     Tobias Grosser, Sven Verdoolaege, Albert Cohen<br>
+     ACM transactions on programming languages and systems (TOPLAS), 2015<br>
+     <a href="http://www.grosser.es/#pub-polyhedral-AST-generation">Details</a>
+  </p>
+  </div>
+  <script src="pypyjs-release/lib/Promise.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="pypyjs-release/lib/FunctionPromise.js" type="text/javascript" charset="utf-8"></script>
+  <script src="pypyjs-release/lib/pypy.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="js/jquery-migrate-1.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    var exp_format = "python";
+    var pt_lastCellNumber = 0;
+    var pt_ip = "input";
+    var pt_op = "output";
+    var sess = {};
+    var pt_graphics_number = 1;
+    var pt_graphics_id = "";
+    let pt_preventBlurExecute = false;
+    let pt_editableSolutions = false;
+
+    function pt_initISL() {
+      Module.printErr = (x) => pt_appendPartialStderr(x + "\n");
+    }
+
+    //initialize vm for the first time
+    $(function() {
+        pt_initISL();
+        pt_initVM(true);
+    });
+
+    // Sets the innerHTML of element.parentElement to the formatted HTML of
+    // the isl.union_set described by the string 'set'.
+    function pt_plot_set(element, set) {
+      vm.eval("islplot.support.format(isl.union_set('" + set + "'))").then(function(result) {
+        element.parentElement.innerHTML = result;
+      });
+    }
+
+    // Sets the innerHTML of element.parentElement to the formatted HTML of
+    // the isl.union_map described by the string 'map'.
+    function pt_plot_map(element, map) {
+      vm.eval("islplot.support.format(isl.union_map('" + map + "'))").then(function(result) {
+        element.parentElement.innerHTML = result;
+      });
+    }
+
+    function escapeHTML(text) {
+      return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+    function replaceNewlines(text) {
+      return text.replace(/\n/g, "<br>")
+    }
+    function pt_toggleVisibility(element) {
+      if (element.style.display == "none") {
+        element.style.display = "block";
+        return true;
+      } else {
+        element.style.display = "none";
+        return false;
+      }
+    }
+
+    function pt_toggleEditableSolutions() {
+      pt_editableSolutions = !pt_editableSolutions;
+
+      for (let i = 1; i <= pt_lastCellNumber; ++i) {
+        let element = pt_getInputFieldByID(i);
+        if (!isSolution(element))
+          continue;
+        if (pt_editableSolutions)
+          $(element).removeAttr('tabindex');
+        else
+          element.tabIndex = -1;
+      }
+    }
+
+    function pt_toggleStackTraceVisibility(element) {
+      let visible = pt_toggleVisibility(element.nextSibling);
+      if (visible)
+        element.innerHTML = "Hide stack trace";
+      else
+        element.innerHTML = "Show stack trace";
+    }
+    function pt_errorHTML(errorObject) {
+      let html = "<div class='alert alert-danger' role='alert><span style='color: red'>";
+      html += '<strong>' + errorObject.name + "</strong>: " + errorObject.message;
+      html += "</span><br><span style='color: black; text-decoration: underline; cursor: pointer' onclick='pt_toggleStackTraceVisibility(this)'>Show stack trace</span>"
+      console.log(errorObject);
+      html += "<div style='display: none; color: black'>" + replaceNewlines(escapeHTML(errorObject.trace.toString())) + "</div>"
+      html += "</div>"
+      return html;
+    }
+
+    function pt_saveSessionToGIST() {
+      var http = new XMLHttpRequest();
+      var url = "https://api.github.com/gists";
+      let sessionCopy = {};
+      for (let iter = 1; sess[iter.toString()] != undefined; iter++) {
+        sessionCopy[iter.toString()] = [sess[iter.toString()][0], '', ''];
+      }
+      let sessdata = JSON.stringify(sessionCopy);
+      var data = {};
+      data["description"] = "Polyhedral Playground";
+      data["public"] = true;
+      data["files"] = {};
+      data["files"]["session.json"] = {};
+      data["files"]["session.json"]["content"] = sessdata;
+      http.open("POST", url, true);
+
+      // Send the proper header information along with the request
+      http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+      http.onreadystatechange = function() { // Call a function when the state changes.
+        if (http.readyState == 4) {
+          if (http.status == 201) {
+            obj = JSON.parse(http.responseText)
+            fullurl = window.location.href.split('?')[0] + "?hash=" + obj['id']
+            $(".modal-body").html("<a href='" + fullurl + "'>" + fullurl + "</a>");
+          } else {
+            $(".modal-body").html("GitLab currently not reachable");
+          }
+          $('#myModal').modal();
+        }
+      }
+      http.send(JSON.stringify(data));
+    }
+
+    /* Wrapping-independent way of automatically adjusting the height of
+     * a text area.
+     */
+    function pt_resizeTextArea(element) {
+      while (element.clientHeight < element.scrollHeight)
+        element.rows += 1;
+    }
+
+    /* Get the string with indentation prefix for the next line based on the
+     * current line.
+     * Use tabs or spaces depending on what is present in leading spaces of the
+     * previous line. Increase indentation if line ends with a colon, assuming
+     * block. Current implementation does not handle string literals or
+     * comments.
+     */
+    function pt_computeIndentation(code) {
+      let lastLineStart = code.lastIndexOf("\n") + 1;  // also handles not found=-1 case
+      let line = code.substr(lastLineStart);
+      let leadingSpaces = line.match(/^[ ]*/)[0].length;
+      let leadingTabs = line.match(/^\t*/)[0].length;
+
+      if (leadingSpaces != 0 && leadingTabs != 0)
+        return "";       // Python will fail on mix of tabs and spaces anyway.
+
+      line = line.trim();
+      let requiresExtraIndent = line.endsWith(":");
+      if (leadingTabs != 0) {
+        if (requiresExtraIndent)
+          leadingTabs += 1;
+        return "\t".repeat(leadingTabs);
+      } else {                      // Prefer spaces.
+        if (requiresExtraIndent)
+          leadingSpaces += 4;
+        return " ".repeat(leadingSpaces);
+      }
+    }
+
+    function pt_backspaceSize(code) {
+      let lastLineStart = code.lastIndexOf("\n") + 1;
+      let line = code.substr(lastLineStart);
+      let spaces = (line.match(/^[ ]*$/) || [""])[0].length;
+      let tabs = (line.match(/^\t*$/) || [""])[0].length;
+
+      if (tabs != 0)
+        return 1;
+      if (spaces < 4)
+        return 1;
+      return 4;
+    }
+
+    function pt_getFieldNumber(element, idPrefix) {
+      let id = element.getAttribute("id");
+      id = id.replace(idPrefix, "");
+      return parseInt(id);
+    }
+
+    // Get the sequential ID of the input cell "element".
+    function pt_getInputFieldNumber(element) {
+      return pt_getFieldNumber(element, pt_ip);
+    }
+
+    function pt_getOutputFieldNumber(element) {
+      return pt_getFieldNumber(element, pt_op);
+    }
+
+    function pt_setFieldNumber(element, num, idPrefix) {
+      element.setAttribute("id", idPrefix + num.toString());
+    }
+
+    // Set the sequential ID of the input cell "element" to "num".
+    function pt_setInputFieldNumber(element, num) {
+      pt_setFieldNumber(element, num, pt_ip);
+    }
+
+    function pt_setOutputFieldNumber(element, num) {
+      pt_setFieldNumber(element, num, pt_op);
+    }
+
+    function pt_getMatchingOutputField(element) {
+      let index = pt_getInputFieldNumber(element);
+      return document.getElementById(pt_op + index.toString());
+    }
+
+    function pt_getMatchingInputField(element) {
+      let index = pt_getOutputFieldNumber(element);
+      return document.getElementById(pt_ip + index.toString());
+    }
+
+    // Get the input field with next sequential ID given input field.
+    // Returns null if such cell does not exist.
+    function pt_getNextCell(element) {
+      let cellNumber = pt_getInputFieldNumber(element);
+      return document.getElementById(pt_ip + (cellNumber + 1).toString());
+    }
+
+    function pt_getNextEditableCell(element) {
+      let nextCell = pt_getNextCell(element);
+      if (pt_editableSolutions)
+        return nextCell;
+
+      while (nextCell && isSolution(nextCell))
+        nextCell = pt_getNextCell(nextCell);
+      return nextCell;
+    }
+
+    // Get the input field with previous sequential ID given input field.
+    // Returns null if such cell does not exist.
+    function pt_getPreviousCell(element) {
+      let cellNumber = pt_getInputFieldNumber(element);
+      return document.getElementById(pt_ip + (cellNumber - 1).toString());
+    }
+
+    function pt_getPreviousEditableCell(element) {
+      let prevCell = pt_getPreviousCell(element);
+      if (pt_editableSolutions)
+        return prevCell;
+
+      while (prevCell && isSolution(prevCell))
+        prevCell = pt_getPreviousCell(prevCell);
+      return prevCell;
+    }
+
+    // Add "offset" to sequential IDs of all input cells starting from
+    // "startFrom" and until the last existing sequential ID.
+    // Caller must ensure that this does not violate uniqueness or
+    // sequentiality of IDs.
+    function pt_offsetCellsBy(startFrom, offset) {
+      let elements = [];
+      let outputFields = [];
+      while (startFrom) {
+        elements.push(startFrom);
+        outputFields.push(pt_getMatchingOutputField(startFrom));
+        startFrom = pt_getNextCell(startFrom);
+      }
+      for (let i = 0; i < elements.length; ++i) {
+        let element = elements[i];
+        let outputField = outputFields[i];
+        let currentCellNumber = pt_getInputFieldNumber(element);
+        pt_setInputFieldNumber(element, currentCellNumber + offset);
+        pt_setOutputFieldNumber(outputField, currentCellNumber + offset);
+      }
+    }
+
+    // Delete the "index"-th item from the session.
+    // Remaining items are shifted if necessary.
+    function pt_sessionDeleteItem(index) {
+      if (!sess[index.toString()] || pt_lastCellNumber == 0)
+        return;
+
+      for (let i = index + 1; i <= pt_lastCellNumber; ++i) {
+        sess[(i - 1).toString()] = sess[i.toString()];
+      }
+      delete sess[pt_lastCellNumber.toString()];
+    }
+
+    // Insert a new empty item to the session after the "index"-th item if
+    // "after"=true (default) and before it otherwise.
+    // Inserting after the last index will append, before the first index will
+    // prepend.
+    function pt_sessionInsertItem(index, after=true) {
+      if (after)
+        index += 1;
+
+      for (let i = pt_lastCellNumber; i >= index; --i) {
+        sess[(i + 1).toString()] = sess[i.toString()];
+      }
+      sess[index.toString()] = ['','',''];
+    }
+
+    function pt_highlightcode(outputElement) {
+      let code_elements = outputElement.getElementsByClassName("cpp hljs");
+      let arrayLength = code_elements.length;
+      for (let i = 0; i < arrayLength; i++) {
+        hljs.highlightBlock(code_elements[i]);
+      }
+    }
+
+    function isMarkdown(element) {
+      return element.value.startsWith("#") &&
+        !element.value.startsWith("#!Solution");
+    }
+
+    function isSolution(element) {
+      return element.value.startsWith("#!Solution");
+    }
+
+    function pt_appendCell(appendSession=true) {
+      pt_insertCell(null, appendSession);
+    }
+
+    function pt_getInputFieldByID(id) {
+      return document.getElementById("input" + id.toString());
+    }
+
+    // Move focus to the next cell if available.
+    function pt_selectNextInputStart(element) {
+      let nextCell = pt_getNextEditableCell(element);
+      if (nextCell) {
+        nextCell.selectionStart = nextCell.selectionEnd = 0;
+        nextCell.focus();
+      }
+    }
+
+    function pt_hideOutputCell(inputField) {
+      let index = pt_getInputFieldNumber(inputField);
+      let outputField = pt_getMatchingOutputField(inputField);
+      outputField.className = "pt-output-hidden";
+    }
+
+    function pt_deleteCell(inputField) {
+      let index = pt_getInputFieldNumber(inputField);
+      let outputField = pt_getMatchingOutputField(inputField);
+
+      let ui = document.getElementById("pt-ui");
+      ui.removeChild(inputField);
+      ui.removeChild(outputField);
+
+      let previousInputField = pt_getPreviousEditableCell(inputField);
+      let nextInputField = pt_getNextEditableCell(inputField);
+
+      pt_offsetCellsBy(pt_getNextCell(inputField), -1);
+      pt_sessionDeleteItem(index);
+      pt_lastCellNumber -= 1;
+
+      if (previousInputField) {
+         previousInputField.selectionStart = previousInputField.length;
+         previousInputField.selectionEnd = previousInputField.length;
+         previousInputField.focus();
+      } else if (nextInputField) {
+         nextInputField.selectionStart = 0;
+         nextInputField.selectionEnd = 0;
+         nextInputField.focus();
+      }
+    }
+
+    function pt_appendCellExistingSession() {
+      pt_appendCell(false);
+    }
+
+    // Inserts a cell after (if "after" is true) or before (otherwise) a cell
+    // containing the input field "inputField".  If "insertSession" is true,
+    // also inserts a session item with the corresponding ID.
+    // Caller must ensure correspondence between session and field IDs.
+    // Inserting after null means append, inserting before null means prepend.
+    function pt_insertCell(inputField, insertSession=true, after=true) {
+      let index = inputField ? pt_getInputFieldNumber(inputField)
+                             : (after ? pt_lastCellNumber : 1);
+
+      if (insertSession)
+        pt_sessionInsertItem(index, after);
+
+      pt_lastCellNumber += 1;
+      if (after)
+        index += 1;
+
+      // null here means no current element; under sequentially assumption,
+      // this insert actually appends a new cell
+      let currentInputElement = document.getElementById(pt_ip + index.toString());
+      pt_offsetCellsBy(currentInputElement, 1);
+
+      let ui = document.getElementById("pt-ui");
+      let newInputElement = document.createElement("textarea");
+      newInputElement.placeholder = "Type in code and press Shift+Enter to execute";
+      newInputElement.rows = 1;
+      newInputElement.setAttribute("id", pt_ip + index.toString());
+      newInputElement.setAttribute("class", "pt-input");
+
+      let newOutputElement = document.createElement("div");
+      newOutputElement.setAttribute("id", pt_op + index.toString());
+      newOutputElement.setAttribute("class", "pt-output");
+
+      newInputElement.addEventListener("keyup", function(event) {
+          if (event.keyCode == 13 && event.shiftKey) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Ignore whitespace-only and empty input in the last cell.
+            let hasNextCell = pt_getNextEditableCell(newInputElement) !== null;
+            if (newInputElement.value.match(/^\s*$/) && !hasNextCell)
+              return;
+
+            let inputProcessed = pt_processInput(newInputElement,
+                                                 newOutputElement);
+            if (!hasNextCell)
+              inputProcessed.then(pt_appendCell);
+            else
+              inputProcessed.then(() => pt_selectNextInputStart(newInputElement));
+          }
+        });
+
+      newInputElement.addEventListener("focus", function(event) {
+          if (isMarkdown(newInputElement) || isSolution(newInputElement)) {
+            pt_hideOutputCell(newInputElement);
+            newInputElement.className = "pt-input-markdown";
+          } else {
+            newInputElement.className = "pt-input";
+          }
+          pt_resizeTextArea(newInputElement);
+      });
+
+      newInputElement.addEventListener("blur", function(event) {
+          if (isMarkdown(newInputElement) || isSolution(newInputElement)) {
+            newInputElement.className = "pt-input-hidden";
+            if (pt_preventBlurExecute) {
+              pt_preventBlurExecute = false;
+              return;
+            }
+
+            newInputElement.rows = 0;
+            let hasNextCell = (pt_getNextCell(newInputElement) != null);
+            let promise = pt_processInput(newInputElement,
+                                  pt_getMatchingOutputField(newInputElement));
+            if (!hasNextCell)
+              promise.then(pt_appendCell);
+            pt_preventBlurExecute = false;
+          }
+      });
+
+      newInputElement.addEventListener("keydown", function(event) {
+          if (event.keyCode == 13) {
+            if (event.shiftKey) {
+              event.preventDefault();
+              event.stopPropagation();
+            } else if (!event.shiftKey && newInputElement.selectionStart == newInputElement.selectionEnd &&
+                       !isMarkdown(newInputElement)) {
+              event.preventDefault();
+              event.stopPropagation();
+              let input = newInputElement.value.substr(0, newInputElement.selectionStart);
+              let remainder = newInputElement.value.substr(newInputElement.selectionStart);
+              let oldPosition = newInputElement.selectionStart;
+              let indent = "\n" + pt_computeIndentation(input.substr(0, input.length));
+              newInputElement.value = input + indent + remainder;
+              newInputElement.selectionStart = oldPosition + indent.length;
+              newInputElement.selectionEnd = oldPosition + indent.length;
+              newInputElement.scrollLeft = 0;
+              pt_resizeTextArea(newInputElement);
+            }
+          } else if (event.keyCode == 8) { // Backspace.
+            let nextInputElement = pt_getNextEditableCell(newInputElement);
+            // Delete cell on backspace unless it is the last cell.
+            if (newInputElement.value === "" && nextInputElement &&
+                !isMarkdown(newInputElement)) {
+              event.preventDefault();
+              event.stopPropagation();
+              pt_deleteCell(newInputElement);
+            } else if (newInputElement.selectionStart == newInputElement.selectionEnd &&
+                       !isMarkdown(newInputElement)) {
+              event.preventDefault();
+              event.stopPropagation();
+              let input = newInputElement.value.substr(0, newInputElement.selectionStart);
+              let deleteChars = pt_backspaceSize(input);
+              let remainder = newInputElement.value.substr(newInputElement.selectionStart);
+              let oldPosition = newInputElement.selectionStart;
+              newInputElement.value = input.substr(0, input.length - deleteChars) + remainder;
+              newInputElement.selectionStart = oldPosition - deleteChars;
+              newInputElement.selectionEnd = oldPosition - deleteChars;
+              pt_resizeTextArea(newInputElement);
+            }
+          } else if (event.keyCode == 38) { // Arrow Up.
+            if (event.shiftKey && event.ctrlKey) {
+              event.preventDefault();
+              event.stopPropagation();
+              pt_insertCell(newInputElement, true, false);
+            } else if (newInputElement.selectionStart == newInputElement.selectionEnd) {
+              let input = newInputElement.value;
+              let firstLineEnd = input.indexOf("\n");
+              if (newInputElement.selectionStart <= firstLineEnd || firstLineEnd == -1) {
+                let previousInputElement = pt_getPreviousEditableCell(newInputElement);
+                if (previousInputElement) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  let previousInput = previousInputElement.value;
+                  let previousLastLineStart = previousInput.lastIndexOf("\n") + 1;
+                  let charOffset = newInputElement.selectionStart
+                  let positionInPrevious = (previousLastLineStart == -1) ? charOffset
+                                        : previousLastLineStart + charOffset;
+                  if (positionInPrevious > previousInput.length)
+                    positionInPrevious = previousInput.length;
+
+                  previousInputElement.focus();
+                  previousInputElement.selectionStart = previousInputElement.selectionEnd = positionInPrevious;
+                }
+              }
+            }
+          } else if (event.keyCode == 40) { // Arrow Down.
+            if (event.shiftKey && event.ctrlKey) {
+              event.preventDefault();
+              event.stopPropagation();
+              pt_insertCell(newInputElement);
+            } else if (newInputElement.selectionStart == newInputElement.selectionEnd) {
+              let input = newInputElement.value;
+              let lastLineStart = input.lastIndexOf("\n") + 1;
+              if (newInputElement.selectionStart >= lastLineStart) {
+                let nextInputElement = pt_getNextEditableCell(newInputElement);
+                if (nextInputElement) {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  let nextInput = nextInputElement.value;
+                  let charOffset = newInputElement.selectionStart - lastLineStart;
+                  let positionInNext = charOffset;
+                  let nextFirstLineEnd = nextInput.indexOf("\n");
+                  if (nextFirstLineEnd == -1 && positionInNext > nextInput.length)
+                    positionInNext = nextInput.length;
+                  else if (nextFirstLineEnd != -1 && positionInNext > nextFirstLineEnd)
+                    positionInNext = nextFirstLineEnd;
+
+                  nextInputElement.focus();
+                  nextInputElement.selectionStart = nextInputElement.selectionEnd = positionInNext;
+                }
+              }
+            }
+          }
+        });
+      newInputElement.addEventListener("input", function() {
+          pt_resizeTextArea(newInputElement);
+          if (isMarkdown(newInputElement)) {
+            newInputElement.className = "pt-input-markdown";
+          } else {
+            newInputElement.className = "pt-input";
+          }
+        });
+
+      newInputElement.addEventListener("scroll", function() {
+        pt_resizeTextArea(newInputElement);
+      });
+
+      ui.insertBefore(newInputElement, currentInputElement);
+      ui.insertBefore(newOutputElement, currentInputElement);
+
+      newInputElement.focus();
+    }
+
+    let pt_partialOutput = "";
+    const PT_PARTIAL_OUTPUT_NORMAL = 0;
+    const PT_PARTIAL_OUTPUT_ERROR = 1;
+    let pt_partialOutputState = PT_PARTIAL_OUTPUT_NORMAL;
+
+    function pt_outputEnterErrorState() {
+      if (pt_partialOutputState == PT_PARTIAL_OUTPUT_NORMAL) {
+        pt_partialOutput += "<div class=\"alert alert-danger\" role=\"alert\">";
+        pt_partialOutputState = PT_PARTIAL_OUTPUT_ERROR;
+      }
+    }
+
+    function pt_outputLeaveErrorState() {
+      if (pt_partialOutputState == PT_PARTIAL_OUTPUT_ERROR) {
+        pt_partialOutput += "</div>";
+        pt_partialOutputState = PT_PARTIAL_OUTPUT_NORMAL;
+      }
+    }
+
+    function pt_appendPartialStdout(line) {
+      pt_outputLeaveErrorState();
+      pt_partialOutput += line;
+    }
+
+    function pt_appendPartialStderr(line) {
+      pt_outputEnterErrorState();
+      pt_partialOutput += line;
+    }
+
+    function pt_finalizeStdoutStderr(outputElement) {
+      pt_outputLeaveErrorState();
+      pt_appendOutput(pt_partialOutput, outputElement);
+      pt_partialOutput = "";
+    }
+
+    function pt_createfunctionCall(code) {
+      var gfunctioncall = "";
+      if (code.includes("uset")) {
+        code = code.replace("uset", pt_graphics_id);
+        gfunctioncall = gfunctioncall + "\nplotUnionSetCombined\(\"#" + pt_graphics_id + "\"," + pt_graphics_id + ", \"" + pt_graphics_id + "\"\)\;";
+      } else {
+        code = code.replace("umap", pt_graphics_id);
+        gfunctioncall = gfunctioncall + "\nplotUnionMapClosed\(\"#" + pt_graphics_id + "\"," + pt_graphics_id + ", \"" + pt_graphics_id + "\"\)\;";
+      }
+      code = code + gfunctioncall;
+      var newcode = code;
+      return newcode;
+    }
+
+    function pt_appendOutput(code, outputElement) {
+      let ui = document.getElementById("pt-ui");
+      outputElement.innerHTML = "";
+
+      if (exp_format != "markdown" && exp_format != "solution")
+        outputElement.className = "pt-output";
+      else
+        outputElement.className = "pt-output-markdown";
+
+      if (exp_format == "error") {
+        outputElement.innerHTML += code;
+      } else if (exp_format == "graphics") {
+        let gdiv = document.createElement('div');
+        pt_graphics_id = "";
+        pt_graphics_id = "graphics" + pt_graphics_number.toString();
+        gdiv.setAttribute("id", pt_graphics_id);
+        outputElement.appendChild(gdiv);
+        let gscript = document.createElement('script');
+        gscript.setAttribute('type', 'text/javascript');
+        code = pt_createfunctionCall(code);
+        gscript.innerHTML = code;
+        outputElement.appendChild(gscript);
+        pt_graphics_number = pt_graphics_number + 1;
+      } else if (exp_format == "markdown" || exp_format == "solution") {
+        outputElement.innerHTML += code;
+      } else {
+        outputElement.innerHTML += replaceNewlines(code);
+      }
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, outputElement]);
+
+      pt_highlightcode(outputElement);
+
+      let id = outputElement.getAttribute("id");
+      id = id.replace(pt_op, "");
+      if (typeof(sess[id]) === "undefined")
+        throw new Error("session/cell ID mismatch");
+
+      sess[id][1] = code;
+      sess[id][2] = exp_format;
+      pt_locallyStoreSession();
+    }
+    function pt_outputError(errorObject, outputElement) {
+      exp_format = "error";
+      pt_appendOutput(pt_errorHTML(errorObject), outputElement);
+      exp_format = "";
+    }
+
+    function pt_editMarkdown(link) {
+      let cell = $(link).parent("div.pt-output-markdown").get(0);
+      let inputField = pt_getMatchingInputField(cell);
+      inputField.className = "pt-input-markdown";
+      inputField.focus();
+      pt_hideOutputCell(inputField);
+    }
+
+    function pt_fillInSolution(link) {
+      let cell = $(link).parent("div.pt-output-markdown");
+      let hiddenInput = cell.children("div.pt-solution").get(0);
+      let code = hiddenInput.innerText;
+      code = code.replace(/^#!Solution\n/,"");
+      cell = cell.get(0);
+      let inputField = pt_getMatchingInputField(cell);
+      let nextCell = pt_getNextCell(inputField);
+      if (!nextCell || nextCell.value != "") {
+        pt_insertCell(inputField, true);
+        nextCell = pt_getNextCell(inputField);
+      }
+      if (!nextCell)
+        console.warn("something weird");
+      nextCell.value = code;
+      pt_resizeTextArea(nextCell);
+      nextCell.focus();
+    }
+
+    function pt_processInput(element, outputElement) {
+      let code = element.value;
+      let id = pt_getInputFieldNumber(element);
+
+      if (pt_editableSolutions)
+        $(element).removeAttr('tabindex');
+
+      if (isMarkdown(element)) {
+        exp_format = "markdown";
+        let converter = new showdown.Converter(),
+        html = "<a onclick='pt_editMarkdown(this)' ";
+        html += "tabindex='-1' ";
+        html += "class=\"pt-markdown-link\">[Markdown]</a>";
+        html += converter.makeHtml(code);
+        code = 'print("""' + html + '""")'
+        pt_preventBlurExecute = true;
+      } else if (isSolution(element)) {
+        exp_format = "solution";
+        code = "<div class=\"pt-solution\" style=\"display: none\">" + code + "</div>"
+        html = "<a onclick='pt_fillInSolution(this)' ";
+        html += "tabindex='-1' ";
+        html += "class=\"pt-markdown-link\">[Solution]</a><br>";
+        code = 'print("""' + code + html + '""")'
+        if (!pt_editableSolutions)
+          element.tabIndex = -1;
+        pt_preventBlurExecute = true;
+      } else if (code.startsWith("graphics")) {
+        exp_format = "graphics";
+        code = code.replace("graphics\(","");
+        code = code.trim();
+        code = code.substring(0, code.length - 1);
+      } else {
+        exp_format = "python";
+      }
+
+      // Session object is now created along with the cell.
+      if (typeof(sess[id.toString()]) === "undefined")
+        throw new Error("session/cell ID mismatch");
+
+      sess[id.toString()][0] = element.value;
+      pt_locallyStoreSession();
+
+      let promise = vm.exec(code)
+        .then(() => pt_finalizeStdoutStderr(outputElement),
+              errorObject => pt_outputError(errorObject, outputElement));
+      return promise;
+    }
+
+    //initialize the vm
+    function pt_initVM(firstInitialization) {
+      window.vm = new PyPyJS();
+      vm.stdout = pt_appendPartialStdout;
+      vm.stderr = pt_appendPartialStderr;
+      var pseudoStatus = setInterval(function() {
+          let waitElement = document.getElementById("pt-wait");
+          waitElement.innerHTML += ".";
+        }, 500);
+
+      vm.ready.then(function() {
+          let removeWaitElement = function() {
+            clearInterval(pseudoStatus);
+            let ui = document.getElementById("pt-ui");
+            let waitElement = document.getElementById("pt-wait");
+            ui.removeChild(waitElement);
+          };
+
+          $.ajax({
+            url: 'isl.txt',
+            type: 'get',
+            async: false,
+            success: function(html) {
+              islpy = String(html);
+            }
+          });
+
+          loadislcode =
+            "import js,sys,imp;                            \
+             islpystr = str(js.globals.islpy);             \
+             sys.modules['isl'] = imp.new_module('isl');   \
+             exec islpystr in sys.modules['isl'].__dict__; \
+             import isl;"
+
+          $.ajax({
+            url: 'islplot_support.txt',
+            type: 'get',
+            async: false,
+            success: function(html) {
+              islplotsupport = String(html);
+            }
+          });
+
+          loadislplotsupportcode =
+            "import js,sys,imp;                                                    \
+             islplotsupportstr = str(js.globals.islplotsupport);                   \
+             sys.modules['islplot'] = imp.new_module('islplot');                   \
+             sys.modules['islplot.support'] = imp.new_module('islplot.support');   \
+             sys.modules['islplot'].support = sys.modules['islplot.support'];      \
+             exec islplotsupportstr in sys.modules['islplot.support'].__dict__;    \
+             import islplot.support;                                               \
+             from islplot.support import plot, format;"
+
+          $.ajax({
+            url: 'Islcompletion.py',
+            type: 'get',
+            async: false,
+            success: function(html) {
+              autopy = String(html);
+            }
+          });
+
+          loadcompletioncode = 
+            "import js,sys,imp;                                                  \
+             autocompletepystr = str(js.globals.autopy);                         \
+             sys.modules['Islcompletion'] = imp.new_module('Islcompletion');     \
+             exec autocompletepystr in sys.modules['Islcompletion'].__dict__;    \
+             import Islcompletion;"
+
+          loadcode = loadislcode + loadislplotsupportcode + loadcompletioncode;
+
+          if (firstInitialization)
+            pt_emptySession();
+
+          let loadPromise = vm.loadModuleData('json')
+              .then(() => {return vm.loadModuleData('string');})
+              .then(() => {return vm.loadModuleData('random');})
+              .then(() => {return vm.loadModuleData('keyword');})
+              .then(() => {return vm.exec(loadcode);})
+              .then(() => {return vm.execfile('../../latex_op.py');})
+              .then(() => {return vm.execfile('../../code_op.py');})
+              .then(removeWaitElement)
+              .then(pt_appendCellExistingSession, pt_appendCellExistingSession)
+          if (firstInitialization) {
+            //first execution - need to check url
+            firstInitialization = false;
+            loadPromise.then(pt_checkURL);
+          } else {
+            //not the first execution - need to check for unexecuted inputs
+            loadPromise.then(pt_executeRemainingInputs);
+          }
+        });
+    }
+
+    function pt_locallyStoreSession(objectName='session') {
+      localStorage.setItem(objectName, JSON.stringify(sess));
+    }
+
+    function pt_getLocallyStoredSession(objectName='session') {
+      let str = localStorage.getItem(objectName);
+      if (!str)
+        return null;
+      return JSON.parse(str);
+    }
+
+    function pt_emptySession() {
+      sess = {};
+      pt_sessionInsertItem(1, false);
+    }
+
+    function pt_isSessionObjectEmpty() {
+      return typeof(sess["1"]) === "undefined";
+    }
+
+    // Delete all current input and output fields
+    function pt_clearCells() {
+      let ui = document.getElementById("pt-ui");
+      ui.innerHTML = "<div id='pt-wait'>Please wait until PyPy.js is loaded.  It is huge, so it may take a while...</div>";
+      pt_lastCellNumber = 0;
+    }
+
+    function pt_newNotebook() {
+      pt_emptySession();
+      pt_executeAll();
+    }
+
+    // Load the session with default name from local storage and execute it.
+    function pt_restoreLastSession() {
+      let savedSession = pt_getLocallyStoredSession();
+      if (!savedSession) {
+        alert("No auto-saved session available.");
+        return;
+      }
+
+      sess = savedSession;
+      pt_executeAll();
+    }
+    //save current session to a file
+    function pt_saveSessionToFile() {
+      function destroyLink(event) {
+        document.body.removeChild(event.target);
+      }
+      let text = JSON.stringify(sess);
+      let textBlob = new Blob([text], {type:'text/plain'});
+      let textURL = window.URL.createObjectURL(textBlob);
+      let link = document.createElement('a');
+      link.download = prompt("Enter the new file name:", "session.json");
+      link.href = textURL;
+      link.onclick = destroyLink;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+    }
+    //load a session from a file
+    function pt_loadSessionFromFile() {
+      let fileSelector = document.getElementById('fileSelector');
+      fileSelector.click();
+    }
+    //run when the file to be loaded is selected
+    function pt_uploadFile() {
+      let fileSelector = document.getElementById('fileSelector');
+      let fileName = fileSelector.files[0];
+      if (fileName == null)
+        return;
+      let reader = new FileReader();
+      reader.onload = function(event) {
+        let text = event.target.result;
+        sess = JSON.parse(text);
+        pt_locallyStoreSession();
+        pt_executeAll();
+      };
+      reader.readAsText(fileName);
+    }
+
+    // Save all current inputs into session, then execute them.
+    function pt_saveAndRunAll() {
+      for (let i = 1; i <= pt_lastCellNumber; ++i) {
+        let field = pt_getInputFieldByID(i);
+        sess[i.toString()][0] = field.value;
+      }
+      pt_executeAll();
+    }
+
+    //execute all inputs in order
+    function pt_executeAll() {
+      let allInputElements = document.getElementsByClassName("pt-input");
+      let allInputMarkdownElements = document.getElementsByClassName("pt-input-markdown");
+      if (!((allInputElements && allInputElements.length != 0) ||
+            (allInputMarkdownElements && allInputMarkdownElements.length != 0))) {
+        alert('Please wait until the page loads completely');
+        return;
+      }
+      pt_locallyStoreSession();
+      pt_clearCells();
+      pt_initVM(false);
+    }
+    //check if more inputs are already in session - if so, keep executing them
+    function pt_executeRemainingInputs() {
+      let sessionEntry = sess[pt_lastCellNumber.toString()];
+      if (!sessionEntry)
+        return;
+
+      // Return early if the last session element has empty input.
+      // This typically happens when the user clicks "Run All".
+      let hasNext = (typeof(sess[(pt_lastCellNumber + 1).toString()]) !== "undefined");
+      if (!hasNext && sessionEntry[0] === "") {
+        $("body").scrollTop(0);
+        return;
+      }
+
+      let inputElement = document.getElementById(pt_ip + pt_lastCellNumber.toString());
+      let outputElement = document.getElementById(pt_op + pt_lastCellNumber.toString());
+      inputElement.value = sessionEntry[0];
+      pt_resizeTextArea(inputElement);
+      pt_processInput(inputElement, outputElement)
+        .then(hasNext ? pt_appendCellExistingSession : pt_appendCell)
+        .then(pt_executeRemainingInputs);
+    }
+    //convert session to URL that will work with same website
+    function pt_getSessionURL() {
+      //create a copy of current session, but only the inputs
+      let sessionCopy = {};
+      for (let iter = 1; sess[iter.toString()] != undefined; iter++) {
+        sessionCopy[iter.toString()] = [sess[iter.toString()][0], '', ''];
+      }
+      let sessurl = location.origin + location.pathname + '?sess=' + encodeURIComponent(JSON.stringify(sessionCopy));
+      prompt('Copy this URL and press Enter', sessurl);
+    }
+    //check URL query section for additional info
+    function pt_checkURL() {
+      //get the list of query pairs
+      let queryList = location.search.substring(1).split('&');
+      //default values of data
+      let querySess = '';
+      let fileURL = '';
+      //check for specific queries
+      for (let iter = 0; iter < queryList.length; iter++) {
+        let queryPair = queryList[iter].split('=');
+        switch (queryPair[0]) {
+          case 'sess':
+            querySess = decodeURIComponent(queryPair[1]);
+            break;
+          case 'url':
+            fileURL = queryPair[1];
+            break;
+          case 'hash':
+            var http = new XMLHttpRequest();
+            var url = "https://api.github.com/gists/" + queryPair[1];
+            http.open("GET", url, true);
+
+            // Send the proper header information along with the request
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+            http.onreadystatechange = function() { // Call a function when the state changes.
+              if (http.readyState == 4) {
+                if (http.status == 200) {
+                  obj = JSON.parse(http.responseText)
+                  fileURL = obj["files"]["session.json"]["raw_url"];
+                  pt_loadSessionFromURL(fileURL);
+                } else {
+                  console.log("Could not reach GitHub");
+                }
+              }
+            }
+            http.send(null);
+            return;
+          default:
+            //not recognized, do nothing
+        }
+      }
+      //use the obtained data
+      if (querySess != '') {
+        sess = JSON.parse(querySess);
+        pt_executeAll();
+      } else if (fileURL != '') {
+        pt_loadSessionFromURL(fileURL);
+      }
+    }
+    function pt_askUserForSessionURL() {
+      let sessurl = prompt('Enter URL of session file');
+      pt_loadSessionFromURL(sessurl);
+    }
+    function pt_loadSessionFromURL(sessurl) {
+      $.get(sessurl, function(data) {sess = data;}, 'json').then(pt_executeAll,function() {alert("Failed to load the file");});
+    }
+    function pt_loadExample(name) {
+      const exampleDir = 'examples/';
+      pt_loadSessionFromURL(exampleDir + name);
+    }
+  </script>
+  <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js'></script>
+</body>
+</html>
